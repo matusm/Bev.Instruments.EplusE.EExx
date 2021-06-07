@@ -46,8 +46,7 @@ namespace Bev.Instruments.EplusE.EExx
             return new Values(Temperature, Humidity);
         }
 
-
-        public void UpdateValues()
+        private void UpdateValues()
         {
             for (int i = 0; i < numberTries; i++)
             {
