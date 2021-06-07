@@ -37,22 +37,13 @@ namespace Bev.Instruments.EplusE.EExx
         public string InstrumentFirmwareVersion => GetInstrumentVersion();
         public string InstrumentID => $"{InstrumentType} {InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
         public int SensorType { get; private set; }
-        public double Temperature { get; private set; }
-        public double Humidity { get; private set; }
+        private double Temperature { get; set; }
+        private double Humidity { get; set; }
 
         public Values GetValues()
         {
             UpdateValues();
             return new Values(Temperature, Humidity);
-        }
-
-        private void UpdateValues()
-        {
-            for (int i = 0; i < numberTries; i++)
-            {
-                _UpdateValues();
-                if (!double.IsNaN(Temperature)) return;
-            }
         }
 
         public void ClearCache()
@@ -62,6 +53,15 @@ namespace Bev.Instruments.EplusE.EExx
             cachedInstrumentFirmwareVersion = genericString;
             SensorType = -1;
             ClearCachedValues();
+        }
+
+        private void UpdateValues()
+        {
+            for (int i = 0; i < numberTries; i++)
+            {
+                _UpdateValues();
+                if (!double.IsNaN(Temperature)) return;
+            }
         }
 
         private void ClearCachedValues()
