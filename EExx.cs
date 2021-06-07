@@ -40,6 +40,12 @@ namespace Bev.Instruments.EplusE.EExx
         public double Temperature { get; private set; }
         public double Humidity { get; private set; }
 
+        public Values GetValues()
+        {
+            UpdateValues();
+            return new Values(Temperature, Humidity);
+        }
+
 
         public void UpdateValues()
         {
