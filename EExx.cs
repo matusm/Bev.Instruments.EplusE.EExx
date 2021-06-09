@@ -126,7 +126,7 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentType()
         {
             // undocumented!
-            byte group, groupH, subGroup;
+            byte groupLowByte, groupHighByte, subGroupByte;
             byte[] reply;
             // Get group designation. 0x07 = EE07 etc.,
             // TODO for CO2 sensors two bytes
@@ -135,24 +135,28 @@ namespace Bev.Instruments.EplusE.EExx
             {
                 return genericString;
             }
-            group = reply[0];
+            groupLowByte = reply[0];
             // Get subgroup designation. 0x09, 0x29, 0x00
             reply = Query(0x51, new byte[] { 0x21 });
             if (reply.Length != 1)
             {
                 return genericString;
             }
-            subGroup = reply[0];
+            subGroupByte = reply[0];
             // Get group H-byte
             reply = Query(0x51, new byte[] { 0x41 });
             if (reply.Length != 1)
             {
                 return genericString;
             }
-            groupH = reply[0];
+            groupHighByte = reply[0];
             // sensor type - what for?
-            SensorType = groupH * 256 + group; //TODO make accessible?
-            return $"EE{group:00}-{subGroup}";
+            SensorType = groupHighByte * 256 + groupLowByte;
+
+            int outputType = (subGroupByte >> 4) & 0x0F;
+            int ftType = subGroupByte & 0x0F;
+
+            return $"EE{groupLowByte:00}-{outputType} FT{ftType}";
         }
 
         private string _GetInstrumentVersion()
