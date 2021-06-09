@@ -2,13 +2,13 @@
 
 namespace Bev.Instruments.EplusE.EExx
 {
-    public class Values
+    public class MeasurementValues
     {
         public double Temperature { get; }
         public double Humidity { get; }
         public DateTime TimeStamp { get; }
 
-        public Values(double temperature, double humidity)
+        public MeasurementValues(double temperature, double humidity)
         {
             TimeStamp = DateTime.UtcNow;
             Temperature = temperature;
