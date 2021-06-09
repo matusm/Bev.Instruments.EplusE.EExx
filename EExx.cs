@@ -36,7 +36,7 @@ namespace Bev.Instruments.EplusE.EExx
         public string InstrumentSerialNumber => GetInstrumentSerialNumber();
         public string InstrumentFirmwareVersion => GetInstrumentVersion();
         public string InstrumentID => $"{InstrumentType} {InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
-        public int SensorType { get; private set; }
+
         private double Temperature { get; set; }
         private double Humidity { get; set; }
 
@@ -51,7 +51,6 @@ namespace Bev.Instruments.EplusE.EExx
             cachedInstrumentType = genericString;
             cachedInstrumentSerialNumber = genericString;
             cachedInstrumentFirmwareVersion = genericString;
-            SensorType = -1;
             ClearCachedValues();
         }
 
@@ -150,13 +149,14 @@ namespace Bev.Instruments.EplusE.EExx
                 return genericString;
             }
             groupHighByte = reply[0];
-            // sensor type - what for?
-            SensorType = groupHighByte * 256 + groupLowByte;
-
+            if (groupHighByte == 0x55 || groupHighByte == 0xFF)
+                groupHighByte = 0x00;
+            int productSeries = groupHighByte * 256 + groupLowByte;
             int outputType = (subGroupByte >> 4) & 0x0F;
             int ftType = subGroupByte & 0x0F;
-
-            return $"EE{groupLowByte:00}-{outputType} FT{ftType}";
+            if(productSeries>=100)
+                return $"EE{productSeries}-{outputType} FT{ftType}";
+            return $"EE{productSeries:00}-{outputType} FT{ftType}";
         }
 
         private string _GetInstrumentVersion()
