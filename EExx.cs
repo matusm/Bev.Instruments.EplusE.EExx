@@ -1,4 +1,28 @@
-﻿using System;
+﻿//*****************************************************************************
+// 
+// Library for the communication of E+E EE03, EE07, EE08 (and simmilar) 
+// transmitters via serial port. The transmitter must be interfaced using the
+// HA011001 E2 to serial converter. This version uses undocumented commands.
+// 
+// Usage:
+// 1.) create instance of the EExx class with the COM port as parameter;
+// 2.) you can consume properties like serial number, type designation, etc.; 
+// 3.) a call to GetValues() returns a MeasurementValues object which contains
+//     properties like temperature, humidity and timestamp
+// 
+// Example:
+//    var device = new EExx("COM1");
+//    Console.Writeline(device.InstrumentID);
+// 
+//    var values = device.GetValues();
+//    Console.Writeline($"{values.Temperature} °C");
+//    Console.Writeline($"{values.Humidity} %");
+// 
+// Author: Michael Matus, 2021
+// 
+//*****************************************************************************
+
+using System;
 using System.IO.Ports;
 using System.Threading;
 using System.Collections.Generic;
