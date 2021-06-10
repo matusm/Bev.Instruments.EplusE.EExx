@@ -154,9 +154,15 @@ namespace Bev.Instruments.EplusE.EExx
             int productSeries = groupHighByte * 256 + groupLowByte;
             int outputType = (subGroupByte >> 4) & 0x0F;
             int ftType = subGroupByte & 0x0F;
+            string typeAsString = "EE";
             if(productSeries>=100)
-                return $"EE{productSeries}-{outputType} FT{ftType}";
-            return $"EE{productSeries:00}-{outputType} FT{ftType}";
+                typeAsString += $"{productSeries}";
+            else
+                typeAsString += $"{productSeries:00}";
+            if (outputType != 0)
+                typeAsString += $"-{outputType}";
+            typeAsString += $" FT{ftType}";
+            return typeAsString;
         }
 
         private string _GetInstrumentVersion()
