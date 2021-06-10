@@ -193,9 +193,9 @@ namespace Bev.Instruments.EplusE.EExx
         private byte[] Query(byte instruction, byte[] DField, int delayTime)
         {
             OpenPort();
-            SendEE07(ComposeCommand(instruction, DField));
+            SendSerialBus(ComposeCommand(instruction, DField));
             Thread.Sleep(delayTime);
-            var buffer = ReadEE07();
+            var buffer = ReadSerialBus();
             ClosePort();
             return AnalyzeRespond(buffer);
         }
@@ -296,7 +296,7 @@ namespace Bev.Instruments.EplusE.EExx
             { }
         }
 
-        private void SendEE07(byte[] command)
+        private void SendSerialBus(byte[] command)
         {
             try
             {
@@ -310,7 +310,7 @@ namespace Bev.Instruments.EplusE.EExx
             }
         }
 
-        private byte[] ReadEE07()
+        private byte[] ReadSerialBus()
         {
             byte[] ErrBuffer = { 0xFF };
             try
