@@ -142,7 +142,7 @@ namespace Bev.Instruments.EplusE.EExx
             {
                 return; // if status gives an error, return
             }
-            Humidity = (reply[0] + (reply[1]) * 256) / 100.0;
+            Humidity = (reply[0] + reply[1] * 256) / 100.0;
             Temperature = (reply[2] + reply[3] * 256) / 100.0 - 273.15;
         }
 
