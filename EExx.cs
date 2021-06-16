@@ -33,7 +33,7 @@ namespace Bev.Instruments.EplusE.EExx
     public class EExx
     {
         private static SerialPort comPort;
-        private const string genericString = "???";     // returned if something failed
+        private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
         private const int delayTimeForRespond = 400;    // rather long delay necessary
         // https://docs.microsoft.com/en-us/dotnet/api/system.io.ports.serialport.close?view=dotnet-plat-ext-5.0
@@ -72,19 +72,10 @@ namespace Bev.Instruments.EplusE.EExx
 
         public void ClearCache()
         {
-            cachedInstrumentType = genericString;
-            cachedInstrumentSerialNumber = genericString;
-            cachedInstrumentFirmwareVersion = genericString;
+            cachedInstrumentType = defaultString;
+            cachedInstrumentSerialNumber = defaultString;
+            cachedInstrumentFirmwareVersion = defaultString;
             ClearCachedValues();
-        }
-
-        private void UpdateValues()
-        {
-            for (int i = 0; i < numberTries; i++)
-            {
-                _UpdateValues();
-                if (!double.IsNaN(Temperature)) return;
-            }
         }
 
         private void ClearCachedValues()
@@ -95,21 +86,21 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string GetInstrumentType()
         {
-            if (cachedInstrumentType == genericString)
+            if (cachedInstrumentType == defaultString)
                 cachedInstrumentType = RepeatMethod(_GetInstrumentType);
             return cachedInstrumentType;
         }
 
         private string GetInstrumentVersion()
         {
-            if (cachedInstrumentFirmwareVersion == genericString)
+            if (cachedInstrumentFirmwareVersion == defaultString)
                 cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersion);
             return cachedInstrumentFirmwareVersion;
         }
 
         private string GetInstrumentSerialNumber()
         {
-            if (cachedInstrumentSerialNumber == genericString)
+            if (cachedInstrumentSerialNumber == defaultString)
                 cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumber);
             return cachedInstrumentSerialNumber;
         }
@@ -119,17 +110,17 @@ namespace Bev.Instruments.EplusE.EExx
             for (int i = 0; i < numberTries; i++)
             {
                 string str = getString();
-                if (str != genericString)
+                if (str != defaultString)
                 {
                     //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
                     return str;
                 }
             }
             //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
-            return genericString;
+            return defaultString;
         }
 
-        private void _UpdateValues()
+        private void UpdateValues()
         {
             ClearCachedValues();
             // see E2Interface-RS232_e1.doc
@@ -156,21 +147,21 @@ namespace Bev.Instruments.EplusE.EExx
             reply = Query(0x51, new byte[] { 0x11 });
             if (reply.Length != 1)
             {
-                return genericString;
+                return defaultString;
             }
             groupLowByte = reply[0];
             // Get subgroup designation. 0x09, 0x29, 0x00
             reply = Query(0x51, new byte[] { 0x21 });
             if (reply.Length != 1)
             {
-                return genericString;
+                return defaultString;
             }
             subGroupByte = reply[0];
             // Get group H-byte
             reply = Query(0x51, new byte[] { 0x41 });
             if (reply.Length != 1)
             {
-                return genericString;
+                return defaultString;
             }
             groupHighByte = reply[0];
             if (groupHighByte == 0x55 || groupHighByte == 0xFF)
@@ -194,7 +185,7 @@ namespace Bev.Instruments.EplusE.EExx
             // undocumented!
             var reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
             if (reply.Length != 4)
-                return genericString;
+                return defaultString;
             var str = Encoding.UTF8.GetString(reply);
             str = str.Insert(2, ".");
             str = str.TrimStart('0');
@@ -206,7 +197,7 @@ namespace Bev.Instruments.EplusE.EExx
             // undocumented!
             var reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
             if (reply.Length == 0)
-                return genericString;
+                return defaultString;
             for (int i = 0; i < reply.Length; i++)
             {
                 if (reply[i] == 0) reply[i] = 0x20; // substitute 0 by space
@@ -306,8 +297,11 @@ namespace Bev.Instruments.EplusE.EExx
             { }
         }
 
+        private bool avoidClosing = true;
         private void ClosePort()
         {
+            if (avoidClosing)
+                return;
             try
             {
                 if (comPort.IsOpen)
