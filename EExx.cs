@@ -35,7 +35,7 @@ namespace Bev.Instruments.EplusE.EExx
         private static SerialPort comPort;
         private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
-        private const int delayTimeForRespond = 400;    // rather long delay necessary
+        private const int delayTimeForRespond = 500;    // rather long delay necessary
         // https://docs.microsoft.com/en-us/dotnet/api/system.io.ports.serialport.close?view=dotnet-plat-ext-5.0
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
