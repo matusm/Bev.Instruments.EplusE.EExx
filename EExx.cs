@@ -38,6 +38,7 @@ namespace Bev.Instruments.EplusE.EExx
         private const int delayTimeForRespond = 400;    // rather long delay necessary
         // https://docs.microsoft.com/en-us/dotnet/api/system.io.ports.serialport.close?view=dotnet-plat-ext-5.0
         private const int waitOnClose = 50;             // No actual value is given, experimental
+        private bool avoidPortClose = true;
 
         private string cachedInstrumentType;
         private string cachedInstrumentSerialNumber;
@@ -133,8 +134,8 @@ namespace Bev.Instruments.EplusE.EExx
             {
                 return; // if status gives an error, return
             }
-            Humidity = (reply[0] + reply[1] * 256) / 100.0;
-            Temperature = (reply[2] + reply[3] * 256) / 100.0 - 273.15;
+            Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
+            Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
         }
 
         private string _GetInstrumentType()
@@ -235,7 +236,7 @@ namespace Bev.Instruments.EplusE.EExx
             byte bsum = 0;
             foreach (byte b in bufferList)
                 bsum += b;
-            bufferList.Add(bsum); // [C]
+            bufferList.Add((byte)bsum); // [C]
             return bufferList.ToArray();
         }
 
@@ -297,10 +298,9 @@ namespace Bev.Instruments.EplusE.EExx
             { }
         }
 
-        private bool avoidClosing = true;
         private void ClosePort()
         {
-            if (avoidClosing)
+            if (avoidPortClose)
                 return;
             try
             {
