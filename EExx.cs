@@ -35,7 +35,7 @@ namespace Bev.Instruments.EplusE.EExx
         private static SerialPort comPort;
         private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
-        private const int delayTimeForRespond = 500;    // rather long delay necessary
+        private int delayTimeForRespond = 500;    // rather long delay necessary
         // https://docs.microsoft.com/en-us/dotnet/api/system.io.ports.serialport.close?view=dotnet-plat-ext-5.0
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
@@ -54,7 +54,7 @@ namespace Bev.Instruments.EplusE.EExx
             ClearCache();
         }
 
-
+        public int DelayTimeForRespond { get => delayTimeForRespond; set => delayTimeForRespond = value; }
         public string DevicePort { get; }
         public string InstrumentManufacturer => "E+E Elektronik";
         public string InstrumentType => GetInstrumentType();
@@ -64,11 +64,13 @@ namespace Bev.Instruments.EplusE.EExx
 
         private double Temperature { get; set; }
         private double Humidity { get; set; }
+        private double Value3 { get; set; }
+        private double Value4 { get; set; }
 
         public MeasurementValues GetValues()
         {
             UpdateValues();
-            return new MeasurementValues(Temperature, Humidity);
+            return new MeasurementValues(Temperature, Humidity, Value3, Value4);
         }
 
         public void ClearCache()
@@ -83,6 +85,8 @@ namespace Bev.Instruments.EplusE.EExx
         {
             Temperature = double.NaN;
             Humidity = double.NaN;
+            Value3 = double.NaN;
+            Value4 = double.NaN;
         }
 
         private string GetInstrumentType()
