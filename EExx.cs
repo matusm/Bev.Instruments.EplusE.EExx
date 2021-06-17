@@ -225,6 +225,16 @@ namespace Bev.Instruments.EplusE.EExx
             return Query(instruction, DField, delayTimeForRespond);
         }
 
+        private byte? QueryE2(byte address)
+        {
+            var reply = Query(0x51, new byte[] { address });
+            if(reply.Length != 1)
+            {
+                return reply[0];
+            }
+            return null;
+        }
+
         private byte[] ComposeCommand(byte BField, byte[] DField)
         {
             List<byte> bufferList = new List<byte>();
