@@ -159,40 +159,6 @@ namespace Bev.Instruments.EplusE.EExx
             return cachedInstrumentSerialNumber;
         }
 
-        private string RepeatMethod(Func<string> getString)
-        {
-            for (int i = 0; i < numberTries; i++)
-            {
-                string str = getString();
-                if (str != defaultString)
-                {
-                    //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
-                    return str;
-                }
-            }
-            //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
-            return defaultString;
-        }
-
-
-
-        private void UpdateValuesUndocumented()
-        {
-            ClearCachedValues();
-            // see E2Interface-RS232_e1.doc
-            var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
-            if (reply.Length != 5)
-            {
-                return; // we need exactly 5 bytes
-            }
-            if (reply[4] != 0x00)
-            {
-                return; // if status gives an error, return
-            }
-            Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
-            Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
-        }
-
         private void GetAvailableValues()
         {
             // E2 bus complient
@@ -211,16 +177,21 @@ namespace Bev.Instruments.EplusE.EExx
             }
         }
 
-        private bool BitIsSet(byte bitPattern, int place)
+        private void UpdateValuesUndocumented()
         {
-            if (place < 0)
-                return false;
-            if (place >= 8)
-                return false;
-            var b = (bitPattern >> place) & 0x01;
-            if (b == 0x00)
-                return false;
-            return true;
+            ClearCachedValues();
+            // see E2Interface-RS232_e1.doc
+            var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
+            if (reply.Length != 5)
+            {
+                return; // we need exactly 5 bytes
+            }
+            if (reply[4] != 0x00)
+            {
+                return; // if status gives an error, return
+            }
+            Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
+            Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
         }
 
         private string _GetInstrumentType()
@@ -324,11 +295,11 @@ namespace Bev.Instruments.EplusE.EExx
             return bufferList.ToArray();
         }
 
-        // This method takes the return byte array, checks if [L] is consistent,
-        // if [S] is ACK and if the [CRC] is ok.
-        // If so [C], [L], [S], [Sd] and [CRC] is stripped and the remaining array returned.
         private byte[] AnalyzeRespond(byte[] buffer)
         {
+            // This method takes the return byte array, checks if [L] is consistent,
+            // if [S] is ACK and if the [CRC] is ok.
+            // If so [C], [L], [S], [Sd] and [CRC] is stripped and the remaining array returned.
             var syntaxError = Array.Empty<byte>();
             if ((buffer.Length) < 5 || buffer == null)
             {
@@ -428,6 +399,33 @@ namespace Bev.Instruments.EplusE.EExx
             }
         }
 
+        private string RepeatMethod(Func<string> getString)
+        {
+            for (int i = 0; i < numberTries; i++)
+            {
+                string str = getString();
+                if (str != defaultString)
+                {
+                    //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
+                    return str;
+                }
+            }
+            //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
+            return defaultString;
+        }
+
+        private bool BitIsSet(byte bitPattern, int place)
+        {
+            if (place < 0)
+                return false;
+            if (place >= 8)
+                return false;
+            var b = (bitPattern >> place) & 0x01;
+            if (b == 0x00)
+                return false;
+            return true;
+        }       
+        
         // function for debbuging purposes
         private string BytesToString(byte[] bytes)
         {
