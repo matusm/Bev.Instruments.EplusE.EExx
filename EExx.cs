@@ -37,7 +37,7 @@ namespace Bev.Instruments.EplusE.EExx
         private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
-        // https://docs.microsoft.com/en-us/dotnet/api/system.io.ports.serialport.close?view=dotnet-plat-ext-5.0
+        private int delayTimeForRespondE2 = 40;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
 
@@ -49,7 +49,6 @@ namespace Bev.Instruments.EplusE.EExx
         private bool temperatureAvailable;
         private bool airVelocityAvailable;
         private bool co2Available;
-
 
         public EExx(string portName)
         {
@@ -67,70 +66,18 @@ namespace Bev.Instruments.EplusE.EExx
         public string InstrumentFirmwareVersion => GetInstrumentVersion();
         public string InstrumentID => $"{InstrumentType} {InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
 
-        private double Temperature { get; set; }
-        private double Humidity { get; set; }
-        private double Value3 { get; set; }
-        private double Value4 { get; set; }
+        public double Temperature { get; private set; }
+        public double Humidity { get; private set; }
+        public double Value3 { get; private set; }
+        public double Value4 { get; private set; }
 
         public MeasurementValues GetValues()
         {
             UpdateValues();
             return new MeasurementValues(Temperature, Humidity, Value3, Value4);
         }
-
-        public void ClearCache()
-        {
-            cachedInstrumentType = defaultString;
-            cachedInstrumentSerialNumber = defaultString;
-            cachedInstrumentFirmwareVersion = defaultString;
-            ClearCachedValues();
-        }
-
-        private void ClearCachedValues()
-        {
-            Temperature = double.NaN;
-            Humidity = double.NaN;
-            Value3 = double.NaN;
-            Value4 = double.NaN;
-        }
-
-        private string GetInstrumentType()
-        {
-            if (cachedInstrumentType == defaultString)
-                cachedInstrumentType = RepeatMethod(_GetInstrumentType);
-            return cachedInstrumentType;
-        }
-
-        private string GetInstrumentVersion()
-        {
-            if (cachedInstrumentFirmwareVersion == defaultString)
-                cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersionUndocumented);
-            return cachedInstrumentFirmwareVersion;
-        }
-
-        private string GetInstrumentSerialNumber()
-        {
-            if (cachedInstrumentSerialNumber == defaultString)
-                cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumberUndocumented);
-            return cachedInstrumentSerialNumber;
-        }
-
-        private string RepeatMethod(Func<string> getString)
-        {
-            for (int i = 0; i < numberTries; i++)
-            {
-                string str = getString();
-                if (str != defaultString)
-                {
-                    //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
-                    return str;
-                }
-            }
-            //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
-            return defaultString;
-        }
-
-        private void UpdateValues()
+        
+        public void UpdateValues()
         {
             // E2 bus complient
             // E2Interface-RS232_englisch.pdf
@@ -170,6 +117,64 @@ namespace Bev.Instruments.EplusE.EExx
             if (statusByte != 0x00)
                 ClearCachedValues();
         }
+        
+        public void ClearCache()
+        {
+            cachedInstrumentType = defaultString;
+            cachedInstrumentSerialNumber = defaultString;
+            cachedInstrumentFirmwareVersion = defaultString;
+            ClearCachedValues();
+        }
+
+        private void ClearCachedValues()
+        {
+            Temperature = double.NaN;
+            Humidity = double.NaN;
+            Value3 = double.NaN;
+            Value4 = double.NaN;
+            temperatureAvailable = false;
+            humidityAvailable = false;
+            co2Available = false;
+            airVelocityAvailable = false;
+        }
+
+        private string GetInstrumentType()
+        {
+            if (cachedInstrumentType == defaultString)
+                cachedInstrumentType = RepeatMethod(_GetInstrumentType);
+            return cachedInstrumentType;
+        }
+
+        private string GetInstrumentVersion()
+        {
+            if (cachedInstrumentFirmwareVersion == defaultString)
+                cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersionUndocumented);
+            return cachedInstrumentFirmwareVersion;
+        }
+
+        private string GetInstrumentSerialNumber()
+        {
+            if (cachedInstrumentSerialNumber == defaultString)
+                cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumberUndocumented);
+            return cachedInstrumentSerialNumber;
+        }
+
+        private string RepeatMethod(Func<string> getString)
+        {
+            for (int i = 0; i < numberTries; i++)
+            {
+                string str = getString();
+                if (str != defaultString)
+                {
+                    //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
+                    return str;
+                }
+            }
+            //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
+            return defaultString;
+        }
+
+
 
         private void UpdateValuesUndocumented()
         {
@@ -292,8 +297,8 @@ namespace Bev.Instruments.EplusE.EExx
 
         private byte? QueryE2(byte address)
         {
-            var reply = Query(0x51, new byte[] { address });
-            if(reply.Length != 1)
+            var reply = Query(0x51, new byte[] { address }, delayTimeForRespondE2);
+            if(reply.Length == 1)
             {
                 return reply[0];
             }
