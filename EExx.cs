@@ -37,7 +37,7 @@ namespace Bev.Instruments.EplusE.EExx
         private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
-        private int delayTimeForRespondE2 = 40;         // specific for E2 bus calls
+        private int delayTimeForRespondE2 = 45;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
 
