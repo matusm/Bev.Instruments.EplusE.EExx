@@ -45,6 +45,11 @@ namespace Bev.Instruments.EplusE.EExx
         private string cachedInstrumentSerialNumber;
         private string cachedInstrumentFirmwareVersion;
 
+        private bool humidityAvailable;
+        private bool temperatureAvailable;
+        private bool airVelocityAvailable;
+        private bool co2Available;
+
 
         public EExx(string portName)
         {
@@ -141,6 +146,36 @@ namespace Bev.Instruments.EplusE.EExx
             Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
             Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
         }
+
+        private void GetAvailableValues()
+        {
+            var bitPattern = QueryE2(0x31);
+            if (bitPattern.HasValue)
+            {
+                humidityAvailable = BitIsSet(bitPattern.Value, 0);
+                temperatureAvailable = BitIsSet(bitPattern.Value, 1);
+                airVelocityAvailable = BitIsSet(bitPattern.Value, 2);
+                co2Available = BitIsSet(bitPattern.Value, 3);
+                // this is for the EE08 with 0x21
+                if (bitPattern.Value == 0x21)
+                {
+                    temperatureAvailable = true;
+                }
+            }
+        }
+
+        private bool BitIsSet(byte bitPattern, int place)
+        {
+            if (place < 0)
+                return false;
+            if (place >= 8)
+                return false;
+            var b = (bitPattern >> place) & 0x01;
+            if (b == 0x00)
+                return false;
+            return true;
+        }
+
 
         private string _GetInstrumentType()
         {
