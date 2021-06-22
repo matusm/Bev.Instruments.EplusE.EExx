@@ -104,14 +104,14 @@ namespace Bev.Instruments.EplusE.EExx
         private string GetInstrumentVersion()
         {
             if (cachedInstrumentFirmwareVersion == defaultString)
-                cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersion);
+                cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersionUndocumented);
             return cachedInstrumentFirmwareVersion;
         }
 
         private string GetInstrumentSerialNumber()
         {
             if (cachedInstrumentSerialNumber == defaultString)
-                cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumber);
+                cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumberUndocumented);
             return cachedInstrumentSerialNumber;
         }
 
@@ -132,6 +132,47 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void UpdateValues()
         {
+            // E2 bus complient
+            // E2Interface-RS232_englisch.pdf
+            // Specification_E2_Interface.pdf
+            byte? humLowByte, humHighByte;
+            byte? tempLowByte, tempHighByte;
+            byte? value3LowByte, value3HighByte;
+            byte? value4LowByte, value4HighByte;
+            ClearCachedValues();
+            GetAvailableValues();
+            if (humidityAvailable)
+            {
+                humLowByte = QueryE2(0x81);
+                humHighByte = QueryE2(0x91);
+                if (humLowByte.HasValue && humHighByte.HasValue)
+                    Humidity = (humLowByte.Value + humHighByte.Value * 256.0) / 100.0;
+            }
+            if (temperatureAvailable)
+            {
+                tempLowByte = QueryE2(0xA1);
+                tempHighByte = QueryE2(0xB1);
+                if (tempLowByte.HasValue && tempHighByte.HasValue)
+                    Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15;
+            }
+            if (co2Available || airVelocityAvailable)
+            {
+                value3LowByte = QueryE2(0xC1);
+                value3HighByte = QueryE2(0xD1);
+                value4LowByte = QueryE2(0xE1);
+                value4HighByte = QueryE2(0xD1);
+                if (value3LowByte.HasValue && value3HighByte.HasValue)
+                    Value3 = value3LowByte.Value + value3HighByte.Value * 256.0;
+                if (value4LowByte.HasValue && value4HighByte.HasValue)
+                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0;
+            }
+            byte? statusByte = QueryE2(0x71);
+            if (statusByte != 0x00)
+                ClearCachedValues();
+        }
+
+        private void UpdateValuesUndocumented()
+        {
             ClearCachedValues();
             // see E2Interface-RS232_e1.doc
             var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
@@ -149,6 +190,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void GetAvailableValues()
         {
+            // E2 bus complient
             var bitPattern = QueryE2(0x31);
             if (bitPattern.HasValue)
             {
@@ -176,9 +218,9 @@ namespace Bev.Instruments.EplusE.EExx
             return true;
         }
 
-
         private string _GetInstrumentType()
         {
+            // E2 bus complient
             byte? groupLowByte = QueryE2(0x11);
             if (!groupLowByte.HasValue)
                 return defaultString;
@@ -208,7 +250,7 @@ namespace Bev.Instruments.EplusE.EExx
             return typeAsString;
         }
 
-        private string _GetInstrumentVersion()
+        private string _GetInstrumentVersionUndocumented()
         {
             // undocumented!
             var reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
@@ -220,7 +262,7 @@ namespace Bev.Instruments.EplusE.EExx
             return str;
         }
 
-        private string _GetInstrumentSerialNumber()
+        private string _GetInstrumentSerialNumberUndocumented()
         {
             // undocumented!
             var reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
