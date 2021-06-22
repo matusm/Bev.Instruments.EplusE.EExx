@@ -163,14 +163,14 @@ namespace Bev.Instruments.EplusE.EExx
         {
             // E2 bus complient
             var bitPattern = QueryE2(0x31);
-            if (bitPattern.HasValue)
+            if (bitPattern is byte register)
             {
-                humidityAvailable = BitIsSet(bitPattern.Value, 0);
-                temperatureAvailable = BitIsSet(bitPattern.Value, 1);
-                airVelocityAvailable = BitIsSet(bitPattern.Value, 2);
-                co2Available = BitIsSet(bitPattern.Value, 3);
+                humidityAvailable = BitIsSet(register, 0);
+                temperatureAvailable = BitIsSet(register, 1);
+                airVelocityAvailable = BitIsSet(register, 2);
+                co2Available = BitIsSet(register, 3);
                 // this is for the EE08 with 0x21
-                if (bitPattern.Value == 0x21)
+                if (register == 0x21)
                 {
                     temperatureAvailable = true;
                 }
