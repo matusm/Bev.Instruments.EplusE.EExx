@@ -33,7 +33,7 @@ namespace Bev.Instruments.EplusE.EExx
 
     public class EExx
     {
-        private readonly SerialPort comPort;                     // this must not be static!
+        private readonly SerialPort comPort;            // this must not be static!
         private const string defaultString = "???";     // returned if something failed
         private const int numberTries = 20;             // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
@@ -144,38 +144,26 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string _GetInstrumentType()
         {
-            // undocumented!
-            byte groupLowByte, groupHighByte, subGroupByte;
-            byte[] reply;
-            // Get group designation. 0x07 = EE07 etc.,
-            // TODO for CO2 sensors two bytes
-            reply = Query(0x51, new byte[] { 0x11 });
-            if (reply.Length != 1)
-            {
+            byte? groupLowByte = QueryE2(0x11);
+            if (!groupLowByte.HasValue)
                 return defaultString;
-            }
-            groupLowByte = reply[0];
-            // Get subgroup designation. 0x09, 0x29, 0x00
-            reply = Query(0x51, new byte[] { 0x21 });
-            if (reply.Length != 1)
-            {
+
+            byte? subGroupByte = QueryE2(0x21);
+            if (!subGroupByte.HasValue)
                 return defaultString;
-            }
-            subGroupByte = reply[0];
-            // Get group H-byte
-            reply = Query(0x51, new byte[] { 0x41 });
-            if (reply.Length != 1)
-            {
+
+            byte? groupHighByte = QueryE2(0x41);
+            if (!groupHighByte.HasValue)
                 return defaultString;
-            }
-            groupHighByte = reply[0];
+
             if (groupHighByte == 0x55 || groupHighByte == 0xFF)
                 groupHighByte = 0x00;
-            int productSeries = groupHighByte * 256 + groupLowByte;
-            int outputType = (subGroupByte >> 4) & 0x0F;
-            int ftType = subGroupByte & 0x0F;
+
+            int productSeries = groupHighByte.Value * 256 + groupLowByte.Value;
+            int outputType = (subGroupByte.Value >> 4) & 0x0F;
+            int ftType = subGroupByte.Value & 0x0F;
             string typeAsString = "EE";
-            if(productSeries>=100)
+            if (productSeries >= 100)
                 typeAsString += $"{productSeries}";
             else
                 typeAsString += $"{productSeries:00}";
