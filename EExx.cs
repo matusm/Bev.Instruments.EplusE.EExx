@@ -82,32 +82,28 @@ namespace Bev.Instruments.EplusE.EExx
             // E2 bus complient
             // E2Interface-RS232_englisch.pdf
             // Specification_E2_Interface.pdf
-            byte? humLowByte, humHighByte;
-            byte? tempLowByte, tempHighByte;
-            byte? value3LowByte, value3HighByte;
-            byte? value4LowByte, value4HighByte;
             ClearCachedValues();
             GetAvailableValues();
             if (humidityAvailable)
             {
-                humLowByte = QueryE2(0x81);
-                humHighByte = QueryE2(0x91);
+                var humLowByte = QueryE2(0x81);
+                var humHighByte = QueryE2(0x91);
                 if (humLowByte.HasValue && humHighByte.HasValue)
                     Humidity = (humLowByte.Value + humHighByte.Value * 256.0) / 100.0;
             }
             if (temperatureAvailable)
             {
-                tempLowByte = QueryE2(0xA1);
-                tempHighByte = QueryE2(0xB1);
+                var tempLowByte = QueryE2(0xA1);
+                var tempHighByte = QueryE2(0xB1);
                 if (tempLowByte.HasValue && tempHighByte.HasValue)
                     Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15;
             }
             if (co2Available || airVelocityAvailable)
             {
-                value3LowByte = QueryE2(0xC1);
-                value3HighByte = QueryE2(0xD1);
-                value4LowByte = QueryE2(0xE1);
-                value4HighByte = QueryE2(0xD1);
+                var value3LowByte = QueryE2(0xC1);
+                var value3HighByte = QueryE2(0xD1);
+                var value4LowByte = QueryE2(0xE1);
+                var value4HighByte = QueryE2(0xD1);
                 if (value3LowByte.HasValue && value3HighByte.HasValue)
                     Value3 = value3LowByte.Value + value3HighByte.Value * 256.0;
                 if (value4LowByte.HasValue && value4HighByte.HasValue)
@@ -163,14 +159,14 @@ namespace Bev.Instruments.EplusE.EExx
         {
             // E2 bus complient
             var bitPattern = QueryE2(0x31);
-            if (bitPattern is byte register)
+            if (bitPattern is byte bits)
             {
-                humidityAvailable = BitIsSet(register, 0);
-                temperatureAvailable = BitIsSet(register, 1);
-                airVelocityAvailable = BitIsSet(register, 2);
-                co2Available = BitIsSet(register, 3);
+                humidityAvailable = BitIsSet(bits, 0);
+                temperatureAvailable = BitIsSet(bits, 1);
+                airVelocityAvailable = BitIsSet(bits, 2);
+                co2Available = BitIsSet(bits, 3);
                 // this is for the EE08 with 0x21
-                if (register == 0x21)
+                if (bits == 0x21)
                 {
                     temperatureAvailable = true;
                 }
@@ -179,6 +175,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void UpdateValuesUndocumented()
         {
+            // this works for temperature and humidity only
             ClearCachedValues();
             // see E2Interface-RS232_e1.doc
             var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
@@ -301,7 +298,7 @@ namespace Bev.Instruments.EplusE.EExx
             // if [S] is ACK and if the [CRC] is ok.
             // If so [C], [L], [S], [Sd] and [CRC] is stripped and the remaining array returned.
             var syntaxError = Array.Empty<byte>();
-            if ((buffer.Length) < 5 || buffer == null)
+            if (buffer.Length < 5 || buffer == null)
             {
                 // response too short
                 return syntaxError;
@@ -333,7 +330,6 @@ namespace Bev.Instruments.EplusE.EExx
             // check count of data bytes
             if (buffer[1] + 3 != buffer.Length)
             {
-                // given data length not consistent
                 return syntaxError;
             }
             byte[] tempbuff = new byte[buffer.Length - 5];
