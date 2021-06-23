@@ -35,7 +35,7 @@ namespace Bev.Instruments.EplusE.EExx
     {
         private readonly SerialPort comPort;            // this must not be static!
         private const string defaultString = "???";     // returned if something failed
-        private const int numberTries = 20;             // number of tries before call gives up
+        private const int numberOfTries = 20;           // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
         private int delayTimeForRespondE2 = 45;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
@@ -70,6 +70,8 @@ namespace Bev.Instruments.EplusE.EExx
         public double Humidity { get; private set; }
         public double Value3 { get; private set; }
         public double Value4 { get; private set; }
+
+        public bool NeverUseCache { get; set; } = false;
 
         public MeasurementValues GetValues()
         {
@@ -136,21 +138,21 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string GetInstrumentType()
         {
-            if (cachedInstrumentType == defaultString)
+            if (cachedInstrumentType == defaultString || NeverUseCache)
                 cachedInstrumentType = RepeatMethod(_GetInstrumentType);
             return cachedInstrumentType;
         }
 
         private string GetInstrumentVersion()
         {
-            if (cachedInstrumentFirmwareVersion == defaultString)
+            if (cachedInstrumentFirmwareVersion == defaultString || NeverUseCache)
                 cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersionUndocumented);
             return cachedInstrumentFirmwareVersion;
         }
 
         private string GetInstrumentSerialNumber()
         {
-            if (cachedInstrumentSerialNumber == defaultString)
+            if (cachedInstrumentSerialNumber == defaultString || NeverUseCache)
                 cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumberUndocumented);
             return cachedInstrumentSerialNumber;
         }
@@ -397,7 +399,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string RepeatMethod(Func<string> getString)
         {
-            for (int i = 0; i < numberTries; i++)
+            for (int i = 0; i < numberOfTries; i++)
             {
                 string str = getString();
                 if (str != defaultString)
