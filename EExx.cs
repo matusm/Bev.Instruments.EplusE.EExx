@@ -9,6 +9,8 @@
 // 2.) you can consume properties like serial number, type designation, etc.; 
 // 3.) a call to GetValues() returns a MeasurementValues object which contains
 //     properties like temperature, humidity and timestamp
+// 3a.) alternativly one can call UpdateValues() and consume the properties
+//     Temperature, Humidity, etc. from this class.
 // 
 // Example:
 //    var device = new EExx("COM1");
