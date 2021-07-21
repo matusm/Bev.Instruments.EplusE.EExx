@@ -230,12 +230,26 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentVersionUndocumented()
         {
             // undocumented!
-            var reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
-            if (reply.Length != 4)
-                return defaultString;
-            var str = Encoding.UTF8.GetString(reply);
-            str = str.Insert(2, ".");
-            str = str.TrimStart('0');
+            byte[] reply = { };
+            string str = string.Empty;
+            if (InstrumentType.Contains("EE07"))
+            {
+                reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
+                if (reply.Length != 4)
+                    return defaultString;
+                str = Encoding.UTF8.GetString(reply);
+                str = str.Insert(2, ".");
+                str = str.TrimStart('0');
+            }
+            if (InstrumentType.Contains("EE03"))
+            {
+                reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
+                Console.WriteLine(reply.Length);
+                Console.WriteLine(BytesToString(reply));
+                if (reply.Length != 1)
+                    return defaultString;
+                str = $"{reply[0]}.00";
+            }
             return str;
         }
 
