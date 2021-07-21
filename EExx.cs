@@ -242,12 +242,21 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentSerialNumberUndocumented()
         {
             // undocumented!
-            var reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
+            byte[] reply = { };
+            if (InstrumentType.Contains("EE07")) 
+            { 
+                reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
+            }
+            if (InstrumentType.Contains("EE03"))
+            {
+                reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
+            }
             if (reply.Length == 0)
                 return defaultString;
             for (int i = 0; i < reply.Length; i++)
             {
                 if (reply[i] == 0) reply[i] = 0x20; // substitute 0 by space
+                if (reply[i] == 0xFF) reply[i] = 0x20; // substitute FF by space
             }
             return Encoding.UTF8.GetString(reply).Trim();
         }

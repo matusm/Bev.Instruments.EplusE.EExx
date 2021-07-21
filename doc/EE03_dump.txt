@@ -1,0 +1,95 @@
+[21/07/2021 13:33:39] - Open port COM3 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:33:40] Written data (COM3) 
+    5a 00 5a                                          Z.Z              
+[21/07/2021 13:33:40] Read data (COM3) 
+    5a 04 06 00 34 31 c9                              Z...41É          
+[21/07/2021 13:33:40] Written data (COM3) 
+    54 01 28 7d                                       T.(}             
+[21/07/2021 13:33:40] Read data (COM3) 
+    54 02 06 00 5c                                    T...\            
+[21/07/2021 13:33:40] Written data (COM3) 
+    51 01 11 63                                       Q..c             
+[21/07/2021 13:33:40] Read data (COM3) 
+    51 03 06 00 03 5d                                 Q....]           
+[21/07/2021 13:33:40] Written data (COM3) 
+    51 01 41 93                                       Q.A“             
+[21/07/2021 13:33:40] Read data (COM3) 
+    51 03 06 00 00 5a                                 Q....Z           
+[21/07/2021 13:33:40] Written data (COM3) 
+    51 01 21 73                                       Q.!s             
+[21/07/2021 13:33:40] Read data (COM3) 
+    51 03 06 00 09 63                                 Q....c           
+[21/07/2021 13:33:40] Written data (COM3) 
+    55 03 51 00 02 ab                                 U.Q..«           
+[21/07/2021 13:33:40] Read data (COM3) 
+    55 04 06 00 00 00 5f                              U....._          
+[21/07/2021 13:33:40] Written data (COM3) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:33:40] Read data (COM3) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:33:40] Written data (COM3) 
+    55 03 01 44 01 9e                                 U..D.ž           
+[21/07/2021 13:33:40] Read data (COM3) 
+    55 03 06 00 02 60                                 U....`           
+[21/07/2021 13:33:40] Written data (COM3) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:33:40] Read data (COM3) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:33:40] Written data (COM3) 
+    55 03 01 70 10 d9                                 U..p.Ù           
+[21/07/2021 13:33:41] Read data (COM3) 
+    55 12 06 00 32 30 33 31 39 33 33 38 31 31 37 35   U...203193381175 
+    ff ff ff ff d4                                    ÿÿÿÿÔ            
+[21/07/2021 13:33:41] - Close port COM3 
+ 
+[21/07/2021 13:33:41] - Open port COM3 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:33:41] Written data (COM3) 
+    5a 00 5a                                          Z.Z              
+[21/07/2021 13:33:42] - Close port COM3 
+ 
+[21/07/2021 13:33:42] - Open port COM3 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:33:43] Written data (COM3) 
+    54 01 28 7d                                       T.(}             
+[21/07/2021 13:33:43] Read data (COM3) 
+    54 02 06 00 5c                                    T...\            
+[21/07/2021 13:33:43] Written data (COM3) 
+    51 01 31 83                                       Q.1ƒ             
+[21/07/2021 13:33:43] Read data (COM3) 
+    51 03 15 03 00 6c                                 Q....l           
+[21/07/2021 13:33:43] Written data (COM3) 
+    51 01 31 83                                       Q.1ƒ             
+[21/07/2021 13:33:43] Read data (COM3) 
+    51 03 06 00 03 5d                                 Q....]           
+[21/07/2021 13:33:44] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:45] Read data (COM3) 
+    58 07 06 00 4b 0e c1 74 00 f3                     X...K.Át.ó       
+[21/07/2021 13:33:46] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:47] Read data (COM3) 
+    58 07 06 00 99 0e cd 74 00 4d                     X...™.Ít.M       
+[21/07/2021 13:33:48] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:49] Read data (COM3) 
+    58 07 06 00 c0 0e d2 74 00 79                     X...À.Òt.y       
+[21/07/2021 13:33:50] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:51] Read data (COM3) 
+    58 07 06 00 ce 0e d6 74 00 8b                     X...Î.Öt.‹       
+[21/07/2021 13:33:52] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:53] Read data (COM3) 
+    58 07 06 00 d5 0e d7 74 00 93                     X...Õ.×t.“       
+[21/07/2021 13:33:54] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:55] Read data (COM3) 
+    58 07 06 00 d8 0e d8 74 00 97                     X...Ø.Øt.—       
+[21/07/2021 13:33:56] Written data (COM3) 
+    58 03 00 30 3c c7                                 X..0<Ç           
+[21/07/2021 13:33:57] Read data (COM3) 
+    58 07 06 00 df 0e d8 74 00 9e                     X...ß.Øt.ž       
+[21/07/2021 13:33:58] - Close port COM3 
+ 

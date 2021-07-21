@@ -1,0 +1,111 @@
+[21/07/2021 13:39:38] - Open port COM6 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:39:38] Written data (COM6) 
+    5a 00 5a                                          Z.Z              
+[21/07/2021 13:39:38] Read data (COM6) 
+    5a 04 06 00 34 31 c9                              Z...41É          
+[21/07/2021 13:39:38] Written data (COM6) 
+    54 01 28 7d                                       T.(}             
+[21/07/2021 13:39:38] Read data (COM6) 
+    54 02 06 00 5c                                    T...\            
+[21/07/2021 13:39:38] Written data (COM6) 
+    51 01 11 63                                       Q..c             
+[21/07/2021 13:39:38] Read data (COM6) 
+    51 03 06 00 07 61                                 Q....a           
+[21/07/2021 13:39:38] Written data (COM6) 
+    51 01 41 93                                       Q.A“             
+[21/07/2021 13:39:38] Read data (COM6) 
+    51 03 06 00 55 af                                 Q...U¯           
+[21/07/2021 13:39:39] Written data (COM6) 
+    51 01 21 73                                       Q.!s             
+[21/07/2021 13:39:39] Read data (COM6) 
+    51 03 06 00 29 83                                 Q...)ƒ           
+[21/07/2021 13:39:39] Written data (COM6) 
+    55 03 51 00 02 ab                                 U.Q..«           
+[21/07/2021 13:39:39] Read data (COM6) 
+    55 04 06 00 55 55 09                              U...UU.          
+[21/07/2021 13:39:39] Written data (COM6) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:39:39] Read data (COM6) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:39:39] Written data (COM6) 
+    55 03 01 80 04 dd                                 U..€.Ý           
+[21/07/2021 13:39:39] Read data (COM6) 
+    55 06 06 00 30 33 30 32 26                        U...0302&        
+[21/07/2021 13:39:39] Written data (COM6) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:39:39] Read data (COM6) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:39:39] Written data (COM6) 
+    55 03 01 84 10 ed                                 U..„.í           
+[21/07/2021 13:39:40] Read data (COM6) 
+    55 12 06 00 31 39 34 38 30 35 30 30 30 30 37 34   U...194805000074 
+    31 39 00 00 3d                                    19..=            
+[21/07/2021 13:39:40] - Close port COM6 
+ 
+[21/07/2021 13:39:40] - Open port COM6 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:39:40] Written data (COM6) 
+    5a 00 5a                                          Z.Z              
+[21/07/2021 13:39:41] - Close port COM6 
+ 
+[21/07/2021 13:39:41] - Open port COM6 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:39:41] Written data (COM6) 
+    54 01 64 b9                                       T.d¹             
+[21/07/2021 13:39:41] Read data (COM6) 
+    54 02 06 00 5c                                    T...\            
+[21/07/2021 13:39:41] Written data (COM6) 
+    51 01 31 83                                       Q.1ƒ             
+[21/07/2021 13:39:41] Read data (COM6) 
+    51 03 06 00 03 5d                                 Q....]           
+[21/07/2021 13:39:41] Written data (COM6) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:39:43] Written data (COM6) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:39:43] Read data (COM6) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:39:43] Written data (COM6) 
+    55 03 01 14 10 7d                                 U....}           
+[21/07/2021 13:39:43] Read data (COM6) 
+    55 12 06 00 30 f8 e8 03 30 f8 e8 03 70 17 b0 1d   U...0øè.0øè.p.°. 
+    70 17 b0 1d 3b                                    p.°.;            
+[21/07/2021 13:39:43] Written data (COM6) 
+    50 03 80 00 40 13                                 P.€.@.           
+[21/07/2021 13:39:43] Read data (COM6) 
+    50 02 06 00 58                                    P...X            
+[21/07/2021 13:39:43] Written data (COM6) 
+    55 03 01 14 10 7d                                 U....}           
+[21/07/2021 13:39:44] Read data (COM6) 
+    55 12 06 00 30 f8 e8 03 30 f8 e8 03 70 17 b0 1d   U...0øè.0øè.p.°. 
+    70 17 b0 1d 3b                                    p.°.;            
+[21/07/2021 13:39:44] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:45] Read data (COM6) 
+    58 07 06 00 6d 0d b9 74 00 0c                     X...m.¹t..       
+[21/07/2021 13:39:46] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:47] Read data (COM6) 
+    58 07 06 00 06 0e b2 74 00 9f                     X.....²t.Ÿ       
+[21/07/2021 13:39:48] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:49] Read data (COM6) 
+    58 07 06 00 63 0e ae 74 00 f8                     X...c.®t.ø       
+[21/07/2021 13:39:50] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:51] Read data (COM6) 
+    58 07 06 00 9b 0e ad 74 00 2f                     X...›.­t./       
+[21/07/2021 13:39:52] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:53] Read data (COM6) 
+    58 07 06 00 b1 0e ac 74 00 44                     X...±.¬t.D       
+[21/07/2021 13:39:54] Written data (COM6) 
+    58 03 00 30 1e a9                                 X..0.©           
+[21/07/2021 13:39:55] Read data (COM6) 
+    58 07 06 00 c6 0e ac 74 00 59                     X...Æ.¬t.Y       
+[21/07/2021 13:39:55] - Close port COM6 
+ 
+[21/07/2021 13:39:56] - Open port COM6 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[21/07/2021 13:39:56] - Close port COM6 
+ 
