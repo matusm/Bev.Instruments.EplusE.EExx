@@ -42,6 +42,7 @@ namespace Bev.Instruments.EplusE.EExx
         private int delayTimeForRespondE2 = 45;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
+        private TransmitterGroup transmitterGroup = TransmitterGroup.Unknown;
 
         private string cachedInstrumentType;
         private string cachedInstrumentSerialNumber;
@@ -216,6 +217,7 @@ namespace Bev.Instruments.EplusE.EExx
             int productSeries = groupHighByte.Value * 256 + groupLowByte.Value;
             int outputType = (subGroupByte.Value >> 4) & 0x0F;
             int ftType = subGroupByte.Value & 0x0F;
+            transmitterGroup = IdentifyTransmitterGroup(productSeries);
             string typeAsString = "EE";
             if (productSeries >= 100)
                 typeAsString += $"{productSeries}";
@@ -225,6 +227,17 @@ namespace Bev.Instruments.EplusE.EExx
                 typeAsString += $"-{outputType}";
             typeAsString += $" FT{ftType}";
             return typeAsString;
+        }
+
+        private TransmitterGroup IdentifyTransmitterGroup(int series)
+        {
+            if (series == 3) return TransmitterGroup.EE03;
+            if (series == 7) return TransmitterGroup.EE07;
+            if (series == 8) return TransmitterGroup.EE08;
+            if (series == 871) return TransmitterGroup.EE871;
+            if (series == 892) return TransmitterGroup.EE892;
+            if (series == 893) return TransmitterGroup.EE893;
+            return TransmitterGroup.Unknown;
         }
 
         private string _GetInstrumentVersionUndocumented()
@@ -257,11 +270,11 @@ namespace Bev.Instruments.EplusE.EExx
         {
             // undocumented!
             byte[] reply = { };
-            if (InstrumentType.Contains("EE07")) 
+            if (transmitterGroup==TransmitterGroup.EE07) 
             { 
                 reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
             }
-            if (InstrumentType.Contains("EE03"))
+            if (transmitterGroup == TransmitterGroup.EE03)
             {
                 reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
             }
@@ -458,6 +471,17 @@ namespace Bev.Instruments.EplusE.EExx
             return str;
         }
 
+    }
+
+    internal enum TransmitterGroup
+    {
+        Unknown,
+        EE03,
+        EE07,
+        EE08,
+        EE871,
+        EE892,
+        EE893
     }
 
 }
