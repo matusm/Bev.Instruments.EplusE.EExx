@@ -39,7 +39,7 @@ namespace Bev.Instruments.EplusE.EExx
         private const string defaultString = "???";     // returned if something failed
         private const int numberOfTries = 20;           // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
-        private int delayTimeForRespondE2 = 45;         // specific for E2 bus calls
+        private int delayTimeForRespondE2 = 50;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
         private TransmitterGroup transmitterGroup;
@@ -88,6 +88,8 @@ namespace Bev.Instruments.EplusE.EExx
             // E2 bus complient
             // E2Interface-RS232_englisch.pdf
             // Specification_E2_Interface.pdf
+            if (transmitterGroup == TransmitterGroup.EE03)
+                Thread.Sleep(300); // workaround for the EE03
             ClearCachedValues();
             GetAvailableValues();
             if (humidityAvailable)
