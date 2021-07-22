@@ -42,7 +42,7 @@ namespace Bev.Instruments.EplusE.EExx
         private int delayTimeForRespondE2 = 45;         // specific for E2 bus calls
         private const int waitOnClose = 50;             // No actual value is given, experimental
         private bool avoidPortClose = true;
-        private TransmitterGroup transmitterGroup = TransmitterGroup.Unknown;
+        private TransmitterGroup transmitterGroup;
 
         private string cachedInstrumentType;
         private string cachedInstrumentSerialNumber;
@@ -60,6 +60,7 @@ namespace Bev.Instruments.EplusE.EExx
             comPort.RtsEnable = true;   // this is essential
             comPort.DtrEnable = true;	// this is essential
             ClearCache();
+            Init();
         }
 
         public string DevicePort { get; }
@@ -67,7 +68,7 @@ namespace Bev.Instruments.EplusE.EExx
         public string InstrumentType => GetInstrumentType();
         public string InstrumentSerialNumber => GetInstrumentSerialNumber();
         public string InstrumentFirmwareVersion => GetInstrumentVersion();
-        public string InstrumentID => $"{InstrumentType} {InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
+        public string InstrumentID => $"{InstrumentType} v{InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
 
         public double Temperature { get; private set; }
         public double Humidity { get; private set; }
@@ -124,6 +125,7 @@ namespace Bev.Instruments.EplusE.EExx
             cachedInstrumentType = defaultString;
             cachedInstrumentSerialNumber = defaultString;
             cachedInstrumentFirmwareVersion = defaultString;
+            transmitterGroup = TransmitterGroup.Unknown;
             ClearCachedValues();
         }
 
@@ -149,14 +151,20 @@ namespace Bev.Instruments.EplusE.EExx
         private string GetInstrumentVersion()
         {
             if (cachedInstrumentFirmwareVersion == defaultString || NeverUseCache)
+            {
+                GetInstrumentType(); // to make sure transmitterGroup is set
                 cachedInstrumentFirmwareVersion = RepeatMethod(_GetInstrumentVersionUndocumented);
+            }
             return cachedInstrumentFirmwareVersion;
         }
 
         private string GetInstrumentSerialNumber()
         {
             if (cachedInstrumentSerialNumber == defaultString || NeverUseCache)
+            {
+                GetInstrumentType(); // to make sure transmitterGroup is set
                 cachedInstrumentSerialNumber = RepeatMethod(_GetInstrumentSerialNumberUndocumented);
+            }
             return cachedInstrumentSerialNumber;
         }
 
@@ -183,17 +191,34 @@ namespace Bev.Instruments.EplusE.EExx
             // this works for temperature and humidity only
             ClearCachedValues();
             // see E2Interface-RS232_e1.doc
-            var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
-            if (reply.Length != 5)
+            if (transmitterGroup == TransmitterGroup.EE07)
             {
-                return; // we need exactly 5 bytes
+                var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
+                if (reply.Length != 5)
+                {
+                    return; // we need exactly 5 bytes
+                }
+                if (reply[4] != 0x00)
+                {
+                    return; // if status gives an error, return
+                }
+                Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
+                Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
             }
-            if (reply[4] != 0x00)
+            if (transmitterGroup == TransmitterGroup.EE03)
             {
-                return; // if status gives an error, return
+                var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x3C });
+                if (reply.Length != 5)
+                {
+                    return; // we need exactly 5 bytes
+                }
+                if (reply[4] != 0x00)
+                {
+                    return; // if status gives an error, return
+                }
+                Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
+                Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
             }
-            Humidity = (reply[0] + reply[1] * 256.0) / 100.0;
-            Temperature = (reply[2] + reply[3] * 256.0) / 100.0 - 273.15;
         }
 
         private string _GetInstrumentType()
@@ -243,9 +268,10 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentVersionUndocumented()
         {
             // undocumented!
+            _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
             byte[] reply = { };
             string str = string.Empty;
-            if (InstrumentType.Contains("EE07"))
+            if (transmitterGroup == TransmitterGroup.EE07)
             {
                 reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
                 if (reply.Length != 4)
@@ -254,11 +280,11 @@ namespace Bev.Instruments.EplusE.EExx
                 str = str.Insert(2, ".");
                 str = str.TrimStart('0');
             }
-            if (InstrumentType.Contains("EE03"))
+            if (transmitterGroup == TransmitterGroup.EE03)
             {
                 reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
-                Console.WriteLine(reply.Length);
-                Console.WriteLine(BytesToString(reply));
+                //Console.WriteLine(reply.Length);
+                //Console.WriteLine(BytesToString(reply));
                 if (reply.Length != 1)
                     return defaultString;
                 str = $"{reply[0]}.00";
@@ -269,6 +295,7 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentSerialNumberUndocumented()
         {
             // undocumented!
+            _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
             byte[] reply = { };
             if (transmitterGroup==TransmitterGroup.EE07) 
             { 
@@ -286,6 +313,16 @@ namespace Bev.Instruments.EplusE.EExx
                 if (reply[i] == 0xFF) reply[i] = 0x20; // substitute FF by space
             }
             return Encoding.UTF8.GetString(reply).Trim();
+        }
+
+        private void Init()
+        {
+            //_ = Query(0x5A, new byte[] { });
+            //_ = Query(0x54, new byte[] { 0x28 });
+            _GetInstrumentType();
+            //_ = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
+            _GetInstrumentVersionUndocumented();
+            _GetInstrumentSerialNumberUndocumented();
         }
 
         private byte[] Query(byte instruction, byte[] DField, int delayTime)
@@ -442,7 +479,6 @@ namespace Bev.Instruments.EplusE.EExx
                 string str = getString();
                 if (str != defaultString)
                 {
-                    //if (i > 0) Console.WriteLine($"***** {i + 1} tries!");
                     return str;
                 }
             }
