@@ -176,10 +176,10 @@ namespace Bev.Instruments.EplusE.EExx
             var bitPattern = QueryE2(0x31);
             if (bitPattern is byte bits)
             {
-                humidityAvailable = BitIsSet(bits, 0);
-                temperatureAvailable = BitIsSet(bits, 1);
-                airVelocityAvailable = BitIsSet(bits, 2);
-                co2Available = BitIsSet(bits, 3);
+                humidityAvailable = IsBitSetInByte(bits, 0);
+                temperatureAvailable = IsBitSetInByte(bits, 1);
+                airVelocityAvailable = IsBitSetInByte(bits, 2);
+                co2Available = IsBitSetInByte(bits, 3);
                 // this is for the EE08 with 0x21
                 if (bits == 0x21)
                 {
@@ -488,7 +488,7 @@ namespace Bev.Instruments.EplusE.EExx
             return defaultString;
         }
 
-        private bool BitIsSet(byte bitPattern, int place)
+        private bool IsBitSetInByte(byte bitPattern, int place)
         {
             if (place < 0)
                 return false;
