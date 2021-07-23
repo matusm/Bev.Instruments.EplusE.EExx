@@ -40,8 +40,6 @@ namespace Bev.Instruments.EplusE.EExx
         private const int numberOfTries = 20;           // number of tries before call gives up
         private int delayTimeForRespond = 500;          // rather long delay necessary
         private int delayTimeForRespondE2 = 50;         // specific for E2 bus calls
-        private const int waitOnClose = 50;             // No actual value is given, experimental
-        private bool avoidPortClose = true;
         private TransmitterGroup transmitterGroup;
 
         private string cachedInstrumentType;
@@ -351,7 +349,6 @@ namespace Bev.Instruments.EplusE.EExx
             SendSerialBus(ComposeCommand(instruction, DField));
             Thread.Sleep(delayTime);
             var buffer = ReadSerialBus();
-            ClosePort();
             return AnalyzeRespond(buffer);
         }
 
@@ -448,14 +445,11 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void ClosePort()
         {
-            if (avoidPortClose)
-                return;
             try
             {
                 if (comPort.IsOpen)
                 {
                     comPort.Close();
-                    Thread.Sleep(waitOnClose);
                 }
             }
             catch (Exception)
