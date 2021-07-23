@@ -9,7 +9,7 @@ namespace Bev.Instruments.EplusE.EExx {
         public double Value3 { get; }
         public double Value4 { get; }
 
-        public MeasurementValues(double temperature, double humidity, double value3, double value4) {
+        internal MeasurementValues(double temperature, double humidity, double value3, double value4) {
             TimeStamp = DateTime.UtcNow;
             Temperature = temperature;
             Humidity = humidity;
