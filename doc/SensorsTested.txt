@@ -75,4 +75,12 @@ SN:           19480500007419
 Version:      3.02
 InstrumentID: EE07-2 FT9 v3.02 SN:19480500007419 @ COM6
 
+Port:         COM3
+Manufacturer: E+E Elektronik
+Type:         EE08 FT7
+SN:           21241600105690
+Version:      2.00
+InstrumentID: EE08 FT7 v2.00 SN:21241600105690 @ COM3
+
+
 
