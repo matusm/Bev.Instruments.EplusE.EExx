@@ -82,7 +82,7 @@ namespace Bev.Instruments.EplusE.EExx
             UpdateValues();
             return new MeasurementValues(Temperature, Humidity, Value3, Value4);
         }
-        
+
         public void UpdateValues()
         {
             // E2 bus complient
@@ -91,6 +91,7 @@ namespace Bev.Instruments.EplusE.EExx
             if (transmitterGroup == TransmitterGroup.EE03)
                 Thread.Sleep(300); // workaround for the EE03
             ClearCachedValues();
+            // UpdateValuesUndocumented(); return; // uncomment for testing alternative Update
             GetAvailableValues();
             if (humidityAvailable)
             {
@@ -121,7 +122,7 @@ namespace Bev.Instruments.EplusE.EExx
             if (statusByte != 0x00)
                 ClearCachedValues();
         }
-        
+
         public void ClearCache()
         {
             cachedInstrumentType = defaultString;
@@ -193,7 +194,7 @@ namespace Bev.Instruments.EplusE.EExx
             // this works for temperature and humidity only
             ClearCachedValues();
             // see E2Interface-RS232_e1.doc
-            if (transmitterGroup == TransmitterGroup.EE07)
+            if (transmitterGroup == TransmitterGroup.EE07 || transmitterGroup == TransmitterGroup.EE08)
             {
                 var reply = Query(0x58, new byte[] { 0x00, 0x30, 0x1E });
                 if (reply.Length != 5)
@@ -226,8 +227,12 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentType()
         {
             // E2 bus complient
+            transmitterGroup = TransmitterGroup.Unknown;
             byte? groupLowByte = QueryE2(0x11);
             if (!groupLowByte.HasValue)
+                return defaultString;
+
+            if (groupLowByte == 0x55 || groupLowByte == 0xFF)
                 return defaultString;
 
             byte? subGroupByte = QueryE2(0x21);
@@ -270,39 +275,53 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentVersionUndocumented()
         {
             // undocumented!
-            _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
-            byte[] reply = { };
-            string str = string.Empty;
+            if (transmitterGroup == TransmitterGroup.EE08)
+            {
+                byte[] reply = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
+                if (reply.Length != 2)
+                    return defaultString;
+                string str = $"{reply[0]}.{reply[1]:D2}";
+                return str;
+            }
             if (transmitterGroup == TransmitterGroup.EE07)
             {
-                reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                byte[] reply = Query(0x55, new byte[] { 0x01, 0x80, 0x04 });
                 if (reply.Length != 4)
                     return defaultString;
-                str = Encoding.UTF8.GetString(reply);
+                string str = Encoding.UTF8.GetString(reply);
                 str = str.Insert(2, ".");
                 str = str.TrimStart('0');
+                return str;
             }
             if (transmitterGroup == TransmitterGroup.EE03)
             {
-                reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                byte[] reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
                 if (reply.Length != 1)
                     return defaultString;
-                str = $"{reply[0]}.00";
+                string str  = $"{reply[0]}.00";
+                return str;
             }
-            return str;
+            return defaultString;
         }
 
         private string _GetInstrumentSerialNumberUndocumented()
         {
             // undocumented!
-            _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
             byte[] reply = { };
-            if (transmitterGroup==TransmitterGroup.EE07) 
-            { 
+            if (transmitterGroup == TransmitterGroup.EE08)
+            {
+                reply = Query(0x55, new byte[] { 0x51, 0xA0, 0x10 }, 2 * delayTimeForRespond);
+            }
+            if (transmitterGroup == TransmitterGroup.EE07)
+            {
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
                 reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
             }
             if (transmitterGroup == TransmitterGroup.EE03)
             {
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
                 reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
             }
             if (reply.Length == 0)
@@ -343,7 +362,7 @@ namespace Bev.Instruments.EplusE.EExx
         private byte? QueryE2(byte address)
         {
             var reply = Query(0x51, new byte[] { address }, delayTimeForRespondE2);
-            if(reply.Length == 1)
+            if (reply.Length == 1)
             {
                 return reply[0];
             }
@@ -496,8 +515,8 @@ namespace Bev.Instruments.EplusE.EExx
             if (b == 0x00)
                 return false;
             return true;
-        }       
-        
+        }
+
         // function for debbuging purposes
         private string BytesToString(byte[] bytes)
         {
