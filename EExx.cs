@@ -2,7 +2,7 @@
 // 
 // Library for the communication of E+E EE03, EE07, EE08 (and simmilar) 
 // transmitters via serial port. The transmitter must be interfaced using the
-// "HA011001 E2 to serial" converter. This version uses undocumented commands.
+// "HA011001 E2 to Serial" converter. This version uses undocumented commands.
 // 
 // Usage:
 // 1.) create instance of the EExx class with the COM port name as parameter;
@@ -115,14 +115,14 @@ namespace Bev.Instruments.EplusE.EExx
                 var humLowByte = QueryE2(0x81);
                 var humHighByte = QueryE2(0x91);
                 if (humLowByte.HasValue && humHighByte.HasValue)
-                    Humidity = (humLowByte.Value + humHighByte.Value * 256.0) / 100.0;
+                    Humidity = (humLowByte.Value + humHighByte.Value * 256.0) / 100.0; // in %
             }
             if (temperatureAvailable)
             {
                 var tempLowByte = QueryE2(0xA1);
                 var tempHighByte = QueryE2(0xB1);
                 if (tempLowByte.HasValue && tempHighByte.HasValue)
-                    Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15;
+                    Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15; // in °C
             }
             if (value4Available || value3Available)
             {
@@ -131,9 +131,9 @@ namespace Bev.Instruments.EplusE.EExx
                 var value4LowByte = QueryE2(0xE1);
                 var value4HighByte = QueryE2(0xD1);
                 if (value3LowByte.HasValue && value3HighByte.HasValue)
-                    Value3 = value3LowByte.Value + value3HighByte.Value * 256.0;
+                    Value3 = value3LowByte.Value + value3HighByte.Value * 256.0; // in ppm or mbar
                 if (value4LowByte.HasValue && value4HighByte.HasValue)
-                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0;
+                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0; // in ppm
                 if(transmitterGroup==TransmitterGroup.EE894)
                 {
                     Value3 *= 0.1; // ambient pressure in mbar (hPa)
@@ -457,8 +457,6 @@ namespace Bev.Instruments.EplusE.EExx
             }
             catch (Exception)
             {
-                //Console.WriteLine("***** SendEE07 failed: ", e);
-                return;
             }
         }
 
@@ -473,7 +471,6 @@ namespace Bev.Instruments.EplusE.EExx
             }
             catch (Exception)
             {
-                // Console.WriteLine("***** ReadEE07 failed: ", e);
                 return ErrBuffer;
             }
         }
@@ -488,7 +485,6 @@ namespace Bev.Instruments.EplusE.EExx
                     return str;
                 }
             }
-            //Console.WriteLine($"***** {numberTries}, unsuccessfull!");
             return defaultString;
         }
 
