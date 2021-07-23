@@ -2,10 +2,10 @@
 // 
 // Library for the communication of E+E EE03, EE07, EE08 (and simmilar) 
 // transmitters via serial port. The transmitter must be interfaced using the
-// HA011001 E2 to serial converter. This version uses undocumented commands.
+// "HA011001 E2 to serial" converter. This version uses undocumented commands.
 // 
 // Usage:
-// 1.) create instance of the EExx class with the COM port as parameter;
+// 1.) create instance of the EExx class with the COM port name as parameter;
 // 2.) you can consume properties like serial number, type designation, etc.; 
 // 3.) a call to GetValues() returns a MeasurementValues object which contains
 //     properties like temperature, humidity and timestamp
@@ -90,6 +90,8 @@ namespace Bev.Instruments.EplusE.EExx
             // Specification_E2_Interface.pdf
             if (transmitterGroup == TransmitterGroup.EE03)
                 Thread.Sleep(300); // workaround for the EE03
+            if (transmitterGroup == TransmitterGroup.EE08)
+                Thread.Sleep(300); // workaround for the EE08
             ClearCachedValues();
             // UpdateValuesUndocumented(); return; // uncomment for testing alternative Update
             GetAvailableValues();
