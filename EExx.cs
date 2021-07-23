@@ -46,8 +46,8 @@ namespace Bev.Instruments.EplusE.EExx
 
         private bool humidityAvailable;
         private bool temperatureAvailable;
-        private bool airVelocityAvailable;
-        private bool co2Available;
+        private bool value3Available;
+        private bool value4Available;
 
         public EExx(string portName)
         {
@@ -94,8 +94,8 @@ namespace Bev.Instruments.EplusE.EExx
             Value4 = double.NaN;
             temperatureAvailable = false;
             humidityAvailable = false;
-            co2Available = false;
-            airVelocityAvailable = false;
+            value4Available = false;
+            value3Available = false;
         }
 
         private void UpdateValues()
@@ -124,7 +124,7 @@ namespace Bev.Instruments.EplusE.EExx
                 if (tempLowByte.HasValue && tempHighByte.HasValue)
                     Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15;
             }
-            if (co2Available || airVelocityAvailable)
+            if (value4Available || value3Available)
             {
                 var value3LowByte = QueryE2(0xC1);
                 var value3HighByte = QueryE2(0xD1);
@@ -175,8 +175,8 @@ namespace Bev.Instruments.EplusE.EExx
             {
                 humidityAvailable = IsBitSetInByte(bits, 0);
                 temperatureAvailable = IsBitSetInByte(bits, 1);
-                airVelocityAvailable = IsBitSetInByte(bits, 2);
-                co2Available = IsBitSetInByte(bits, 3);
+                value3Available = IsBitSetInByte(bits, 2);
+                value4Available = IsBitSetInByte(bits, 3);
                 // this is for the EE08 with 0x21
                 if (bits == 0x21)
                 {
@@ -265,6 +265,7 @@ namespace Bev.Instruments.EplusE.EExx
             if (series == 871) return TransmitterGroup.EE871;
             if (series == 892) return TransmitterGroup.EE892;
             if (series == 893) return TransmitterGroup.EE893;
+            if (series == 894) return TransmitterGroup.EE894;
             return TransmitterGroup.Unknown;
         }
 
@@ -518,7 +519,8 @@ namespace Bev.Instruments.EplusE.EExx
         EE08,
         EE871,
         EE892,
-        EE893
+        EE893,
+        EE894
     }
 
 }
