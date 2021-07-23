@@ -21,8 +21,9 @@ namespace Bev.Instruments.EplusE.EExx {
             Value4 = value4;
         }
 
-        public int CompareTo(MeasurementValues other) {
-            return TimeStamp.CompareTo(other.TimeStamp);
-        }
+        public int CompareTo(MeasurementValues other) => TimeStamp.CompareTo(other.TimeStamp);
+
+        public override string ToString() => $"MeasurementValues[Value1={Value1} Value2={Value2} Value3={Value3} Value4={Value4}]";
+
     }
 }
