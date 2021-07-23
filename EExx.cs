@@ -134,6 +134,10 @@ namespace Bev.Instruments.EplusE.EExx
                     Value3 = value3LowByte.Value + value3HighByte.Value * 256.0;
                 if (value4LowByte.HasValue && value4HighByte.HasValue)
                     Value4 = value4LowByte.Value + value4HighByte.Value * 256.0;
+                if(transmitterGroup==TransmitterGroup.EE894)
+                {
+                    Value3 *= 0.1; // ambient pressure in mbar (hPa)
+                }
             }
             byte? statusByte = QueryE2(0x71);
             if (statusByte != 0x00)
