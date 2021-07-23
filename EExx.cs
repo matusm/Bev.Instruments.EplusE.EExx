@@ -8,9 +8,7 @@
 // 1.) create instance of the EExx class with the COM port name as parameter;
 // 2.) you can consume properties like serial number, type designation, etc.; 
 // 3.) a call to GetValues() returns a MeasurementValues object which contains
-//     properties like temperature, humidity and timestamp
-// 3a.) alternativly one can call UpdateValues() and consume the properties
-//     Temperature, Humidity, etc. from this class.
+//     properties like temperature, humidity and timestamp.
 // 
 // Example:
 //    var device = new EExx("COM1");
@@ -58,7 +56,6 @@ namespace Bev.Instruments.EplusE.EExx
             comPort.RtsEnable = true;   // this is essential
             comPort.DtrEnable = true;	// this is essential
             ClearCache();
-            Init();
         }
 
         public string DevicePort { get; }
@@ -331,16 +328,6 @@ namespace Bev.Instruments.EplusE.EExx
                 if (reply[i] == 0xFF) reply[i] = 0x20; // substitute FF by space
             }
             return Encoding.UTF8.GetString(reply).Trim();
-        }
-
-        private void Init()
-        {
-            //_ = Query(0x5A, new byte[] { });
-            //_ = Query(0x54, new byte[] { 0x28 });
-            _GetInstrumentType();
-            //_ = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
-            _GetInstrumentVersionUndocumented();
-            _GetInstrumentSerialNumberUndocumented();
         }
 
         private byte[] Query(byte instruction, byte[] DField, int delayTime)
