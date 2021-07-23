@@ -69,13 +69,12 @@ namespace Bev.Instruments.EplusE.EExx
         public string InstrumentSerialNumber => GetInstrumentSerialNumber();
         public string InstrumentFirmwareVersion => GetInstrumentVersion();
         public string InstrumentID => $"{InstrumentType} v{InstrumentFirmwareVersion} SN:{InstrumentSerialNumber} @ {DevicePort}";
-
-        public double Temperature { get; private set; }
-        public double Humidity { get; private set; }
-        public double Value3 { get; private set; }
-        public double Value4 { get; private set; }
-
         public bool NeverUseCache { get; set; } = false;
+
+        private double Temperature { get; set; }
+        private double Humidity { get; set; }
+        private double Value3 { get; set; }
+        private double Value4 { get; set; }
 
         public MeasurementValues GetValues()
         {
@@ -83,7 +82,28 @@ namespace Bev.Instruments.EplusE.EExx
             return new MeasurementValues(Temperature, Humidity, Value3, Value4);
         }
 
-        public void UpdateValues()
+        private void ClearCache()
+        {
+            cachedInstrumentType = defaultString;
+            cachedInstrumentSerialNumber = defaultString;
+            cachedInstrumentFirmwareVersion = defaultString;
+            transmitterGroup = TransmitterGroup.Unknown;
+            ClearCachedValues();
+        }
+
+        private void ClearCachedValues()
+        {
+            Temperature = double.NaN;
+            Humidity = double.NaN;
+            Value3 = double.NaN;
+            Value4 = double.NaN;
+            temperatureAvailable = false;
+            humidityAvailable = false;
+            co2Available = false;
+            airVelocityAvailable = false;
+        }
+
+        private void UpdateValues()
         {
             // E2 bus complient
             // E2Interface-RS232_englisch.pdf
@@ -123,27 +143,6 @@ namespace Bev.Instruments.EplusE.EExx
             byte? statusByte = QueryE2(0x71);
             if (statusByte != 0x00)
                 ClearCachedValues();
-        }
-
-        public void ClearCache()
-        {
-            cachedInstrumentType = defaultString;
-            cachedInstrumentSerialNumber = defaultString;
-            cachedInstrumentFirmwareVersion = defaultString;
-            transmitterGroup = TransmitterGroup.Unknown;
-            ClearCachedValues();
-        }
-
-        private void ClearCachedValues()
-        {
-            Temperature = double.NaN;
-            Humidity = double.NaN;
-            Value3 = double.NaN;
-            Value4 = double.NaN;
-            temperatureAvailable = false;
-            humidityAvailable = false;
-            co2Available = false;
-            airVelocityAvailable = false;
         }
 
         private string GetInstrumentType()

@@ -17,18 +17,12 @@ The constructor `EExx(string)` creates a new instance of this class taking a str
 * `MeasurementValues GetValues()`
 Gets a `MeasurementValues` object which contains properties like temperature, humidity and timestamp.
  
-* `UpdateValues()`
-Alternative way. One can consume the relevant properties after calling this method.
- 
-* `ClearCache()`
-Necessary for on the fly probe substitution. (not recommended)
- 
 ### Properties
 
-All properties are getters only.
+With the exeption of `NeverUseCache` all properties are getters only.
 
 * `InstrumentManufacturer`
-Returns the string "E+E Elektronik.
+Returns the string "E+E Elektronik".
 
 * `InstrumentType`
 Returns a string of the probe designation.
@@ -44,6 +38,9 @@ Returns a combination of the previous properties which unambiguously identifies 
 
 * `DevicePort`
 The port name as passed to the constructor.
+
+* `NeverUseCache`
+When set to `true`, the probe specific properties like `InstrumentSerialNumber` etc. are queried each time the respective property is called. As this is a very time consuming task, the default is `false` to cache the values. When it is expected to substitute probes on the fly this should be set to `true`.
 
 ## Notes
 
