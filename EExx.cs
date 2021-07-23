@@ -285,8 +285,6 @@ namespace Bev.Instruments.EplusE.EExx
             if (transmitterGroup == TransmitterGroup.EE03)
             {
                 reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
-                //Console.WriteLine(reply.Length);
-                //Console.WriteLine(BytesToString(reply));
                 if (reply.Length != 1)
                     return defaultString;
                 str = $"{reply[0]}.00";
