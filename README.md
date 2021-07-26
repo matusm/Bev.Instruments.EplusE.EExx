@@ -76,7 +76,7 @@ namespace PhotoPlayground
 ```
 ## MeasurementValues Class
 
-This is a simple container class for handling the measurement values (temperature, humidity, ...) obtained by a probe query. Once created the values are inmutable. For new measurement values one has to create a new object of this class. 
+This is a simple container class for handling the measurement values (temperature, humidity, ...) obtained by a probe query. Once created the values are immutable. For new measurement values one has to create a new object of this class. 
 
 ### Members
 
