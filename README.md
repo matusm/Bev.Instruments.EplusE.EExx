@@ -45,7 +45,7 @@ When set to `true`, the probe specific properties like `InstrumentSerialNumber` 
 
 ## Notes
 
-Once instantiated, it is not possible to modify the object's `DevicePort`. However swaping  instruments on the same port may work. Properties like `InstrumentID` etc. will reflect the actual instrument only when `NeverUseCache` is set to a call to `true`.
+Once instantiated, it is not possible to modify the object's `DevicePort`. However swaping  instruments on the same port may work. Properties like `InstrumentID` etc. will reflect the actual instrument only when `NeverUseCache` is set to `true`.
 
 ## Usage
 
