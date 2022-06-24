@@ -325,6 +325,12 @@ namespace Bev.Instruments.EplusE.EExx
                 _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
                 reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
             }
+            if (transmitterGroup == TransmitterGroup.EE894)
+            {
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                reply = Query(0x55, new byte[] { 0x51, 0xa0, 0x10 }, 2 * delayTimeForRespond);
+
+            }
             if (reply.Length == 0)
                 return defaultString;
             for (int i = 0; i < reply.Length; i++)
