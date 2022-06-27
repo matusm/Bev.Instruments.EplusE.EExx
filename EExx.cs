@@ -276,12 +276,13 @@ namespace Bev.Instruments.EplusE.EExx
         private string _GetInstrumentVersionUndocumented()
         {
             // undocumented!
-            if (transmitterGroup == TransmitterGroup.EE08)
+            if (transmitterGroup == TransmitterGroup.EE03)
             {
-                byte[] reply = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
-                if (reply.Length != 2)
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                byte[] reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
+                if (reply.Length != 1)
                     return defaultString;
-                string str = $"{reply[0]}.{reply[1]:D2}";
+                string str = $"{reply[0]}.00";
                 return str;
             }
             if (transmitterGroup == TransmitterGroup.EE07)
@@ -295,15 +296,23 @@ namespace Bev.Instruments.EplusE.EExx
                 str = str.TrimStart('0');
                 return str;
             }
-            if (transmitterGroup == TransmitterGroup.EE03)
+            if (transmitterGroup == TransmitterGroup.EE08)
             {
-                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
-                byte[] reply = Query(0x55, new byte[] { 0x01, 0x44, 0x01 });
-                if (reply.Length != 1)
+                byte[] reply = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
+                if (reply.Length != 2)
                     return defaultString;
-                string str  = $"{reply[0]}.00";
+                string str = $"{reply[0]}.{reply[1]:D2}";
                 return str;
             }
+            if (transmitterGroup == TransmitterGroup.EE894)
+            {
+                byte[] reply = Query(0x55, new byte[] { 0x51, 0x00, 0x02 });
+                if (reply.Length != 2)
+                    return defaultString;
+                string str = $"{reply[0]}.{reply[1]:D2}";
+                return str;
+            }
+
             return defaultString;
         }
 
@@ -311,23 +320,23 @@ namespace Bev.Instruments.EplusE.EExx
         {
             // undocumented!
             byte[] reply = { };
-            if (transmitterGroup == TransmitterGroup.EE08)
+            if (transmitterGroup == TransmitterGroup.EE03)
             {
-                reply = Query(0x55, new byte[] { 0x51, 0xA0, 0x10 }, 2 * delayTimeForRespond);
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });   // TODO check function of this line!
+                reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
             }
             if (transmitterGroup == TransmitterGroup.EE07)
             {
-                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });   // TODO check function of this line!
                 reply = Query(0x55, new byte[] { 0x01, 0x84, 0x10 }, 2 * delayTimeForRespond);
             }
-            if (transmitterGroup == TransmitterGroup.EE03)
+            if (transmitterGroup == TransmitterGroup.EE08)
             {
-                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
-                reply = Query(0x55, new byte[] { 0x01, 0x70, 0x10 }, 2 * delayTimeForRespond);
+                reply = Query(0x55, new byte[] { 0x51, 0xa0, 0x10 }, 2 * delayTimeForRespond);
             }
             if (transmitterGroup == TransmitterGroup.EE894)
             {
-                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });
+                _ = Query(0x50, new byte[] { 0x80, 0x00, 0x40 });   // TODO check function of this line!
                 reply = Query(0x55, new byte[] { 0x51, 0xa0, 0x10 }, 2 * delayTimeForRespond);
 
             }
