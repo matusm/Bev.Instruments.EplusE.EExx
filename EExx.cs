@@ -100,7 +100,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void UpdateValues()
         {
-            // E2 bus complient
+            // E2 bus compliant
             // E2Interface-RS232_englisch.pdf
             // Specification_E2_Interface.pdf
             if (transmitterGroup == TransmitterGroup.EE03)
@@ -176,18 +176,21 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void GetAvailableValues()
         {
-            // E2 bus complient
-            var bitPattern = QueryE2(0x31);
+            // E2 bus compliant
+            byte? bitPattern = QueryE2(0x31);
             if (bitPattern is byte bits)
             {
                 humidityAvailable = IsBitSetInByte(bits, 0);
                 temperatureAvailable = IsBitSetInByte(bits, 1);
                 value3Available = IsBitSetInByte(bits, 2);
                 value4Available = IsBitSetInByte(bits, 3);
-                // this is for the EE08 with 0x21
                 if (bits == 0x21)
                 {
-                    temperatureAvailable = true;
+                    temperatureAvailable = true; // for EE08 with 0x21
+                }
+                if (bits == 0x08)
+                {
+                    value3Available = true; // for EE871 EE892 EE893 with 0x08
                 }
             }
         }
@@ -229,7 +232,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string _GetInstrumentType()
         {
-            // E2 bus complient
+            // E2 bus compliant
             transmitterGroup = TransmitterGroup.Unknown;
             byte? groupLowByte = QueryE2(0x11);
             if (!groupLowByte.HasValue)
