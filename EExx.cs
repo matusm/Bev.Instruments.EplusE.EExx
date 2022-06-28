@@ -129,7 +129,7 @@ namespace Bev.Instruments.EplusE.EExx
                 var value3LowByte = QueryE2(0xC1);
                 var value3HighByte = QueryE2(0xD1);
                 var value4LowByte = QueryE2(0xE1);
-                var value4HighByte = QueryE2(0xD1);
+                var value4HighByte = QueryE2(0xF1);
                 if (value3LowByte.HasValue && value3HighByte.HasValue)
                     Value3 = value3LowByte.Value + value3HighByte.Value * 256.0; // in ppm or mbar
                 if (value4LowByte.HasValue && value4HighByte.HasValue)
