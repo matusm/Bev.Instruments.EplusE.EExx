@@ -1,0 +1,108 @@
+[24/06/2022 13:23:02] - Open port COM1 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[24/06/2022 13:23:02] Written data (COM1) 
+    5a 00 5a                                          Z.Z              
+[24/06/2022 13:23:02] Read data (COM1) 
+    5a 04 06 00 34 31 c9                              Z...41É          
+[24/06/2022 13:23:02] Written data (COM1) 
+    54 01 28 7d                                       T.(}             
+[24/06/2022 13:23:02] Read data (COM1) 
+    54 02 06 00 5c                                    T...\            
+[24/06/2022 13:23:02] Written data (COM1) 
+    51 01 11 63                                       Q..c             
+[24/06/2022 13:23:02] Read data (COM1) 
+    51 03 06 00 7e d8                                 Q...~Ø           
+[24/06/2022 13:23:02] Written data (COM1) 
+    51 01 41 93                                       Q.A“             
+[24/06/2022 13:23:02] Read data (COM1) 
+    51 03 06 00 03 5d                                 Q....]           
+[24/06/2022 13:23:02] Written data (COM1) 
+    51 01 21 73                                       Q.!s             
+[24/06/2022 13:23:02] Read data (COM1) 
+    51 03 06 00 09 63                                 Q....c           
+[24/06/2022 13:23:02] Written data (COM1) 
+    55 03 51 00 02 ab                                 U.Q..«           
+[24/06/2022 13:23:02] Read data (COM1) 
+    55 04 06 00 01 33 93                              U....3“          
+[24/06/2022 13:23:02] Written data (COM1) 
+    55 03 51 03 07 b3                                 U.Q..³           
+[24/06/2022 13:23:03] Read data (COM1) 
+    55 09 06 00 0f 0f 01 0f 17 00 00 a9               U..........©     
+[24/06/2022 13:23:03] Written data (COM1) 
+    55 03 51 a0 10 59                                 U.Q .Y           
+[24/06/2022 13:23:03] Read data (COM1) 
+    55 12 06 00 32 32 30 34 39 33 34 43 31 30 38 34   U...2204934C1084 
+    35 41 00 00 5b                                    5A..[            
+[24/06/2022 13:23:03] - Close port COM1 
+ 
+[24/06/2022 13:23:03] - Open port COM1 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[24/06/2022 13:23:04] Written data (COM1) 
+    5a 00 5a                                          Z.Z              
+[24/06/2022 13:23:05] - Close port COM1 
+ 
+[24/06/2022 13:23:05] - Open port COM1 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[24/06/2022 13:23:05] Written data (COM1) 
+    54 01 50 a5                                       T.P¥             
+[24/06/2022 13:23:05] Read data (COM1) 
+    54 02 06 00 5c                                    T...\            
+[24/06/2022 13:23:05] Written data (COM1) 
+    51 01 31 83                                       Q.1ƒ             
+[24/06/2022 13:23:05] Read data (COM1) 
+    51 03 06 00 0f 69                                 Q....i           
+[24/06/2022 13:23:05] Written data (COM1) 
+    55 03 51 1c 02 c7                                 U.Q..Ç           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 04 06 00 00 00 5f                              U....._          
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 1e 02 c9                                 U.Q..É           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 04 06 00 d0 07 36                              U...Ð.6          
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 1c 02 c7                                 U.Q..Ç           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 04 06 00 00 00 5f                              U....._          
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 1e 02 c9                                 U.Q..É           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 04 06 00 d0 07 36                              U...Ð.6          
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 b0 10 69                                 U.Q°.i           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 12 06 00 45 45 38 39 34 00 00 00 00 00 00 00   U...EE894....... 
+    00 00 00 00 9c                                    ....œ            
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 83 03 2f                                 U.Qƒ./           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 05 06 00 00 00 00 60                           U......`         
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 86 03 32                                 U.Q†.2           
+[24/06/2022 13:23:06] Read data (COM1) 
+    55 05 06 00 00 00 00 60                           U......`         
+[24/06/2022 13:23:06] Written data (COM1) 
+    55 03 51 8c 03 38                                 U.QŒ.8           
+[24/06/2022 13:23:07] Read data (COM1) 
+    55 05 06 00 00 00 00 60                           U......`         
+[24/06/2022 13:23:08] Written data (COM1) 
+    58 03 00 f0 64 af                                 X..ðd¯           
+[24/06/2022 13:23:09] Read data (COM1) 
+    58 0b 06 00 d0 11 0b 75 82 26 ce 02 00 42         X...Ð..u‚&Î..B   
+[24/06/2022 13:23:10] Written data (COM1) 
+    58 03 00 f0 64 af                                 X..ðd¯           
+[24/06/2022 13:23:11] Read data (COM1) 
+    58 0b 06 00 d0 11 0b 75 82 26 ce 02 00 42         X...Ð..u‚&Î..B   
+[24/06/2022 13:23:14] Written data (COM1) 
+    58 03 00 f0 64 af                                 X..ðd¯           
+[24/06/2022 13:23:15] Read data (COM1) 
+    58 0b 06 00 d0 11 0b 75 82 26 ce 02 00 42         X...Ð..u‚&Î..B   
+[24/06/2022 13:23:18] Written data (COM1) 
+    58 03 00 f0 64 af                                 X..ðd¯           
+[24/06/2022 13:23:19] Read data (COM1) 
+    58 0b 06 00 d0 11 0b 75 82 26 ce 02 00 42         X...Ð..u‚&Î..B   
+[24/06/2022 13:23:19] - Close port COM1 
+ 
+[24/06/2022 13:23:19] - Open port COM1 (C:\Program Files\E+E Elektronik\E+E Konfigurator\EEConfig.exe) 
+ 
+[24/06/2022 13:23:20] - Close port COM1 
+ 

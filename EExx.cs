@@ -124,20 +124,23 @@ namespace Bev.Instruments.EplusE.EExx
                 if (tempLowByte.HasValue && tempHighByte.HasValue)
                     Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15; // in °C
             }
-            if (value4Available || value3Available)
+            if (value3Available)
             {
                 var value3LowByte = QueryE2(0xC1);
                 var value3HighByte = QueryE2(0xD1);
-                var value4LowByte = QueryE2(0xE1);
-                var value4HighByte = QueryE2(0xF1);
                 if (value3LowByte.HasValue && value3HighByte.HasValue)
                     Value3 = value3LowByte.Value + value3HighByte.Value * 256.0; // in ppm or mbar
-                if (value4LowByte.HasValue && value4HighByte.HasValue)
-                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0; // in ppm
-                if(transmitterGroup==TransmitterGroup.EE894)
+                if (transmitterGroup == TransmitterGroup.EE894)
                 {
                     Value3 *= 0.1; // ambient pressure in mbar (hPa)
                 }
+            }
+            if (value4Available)
+            {
+                var value4LowByte = QueryE2(0xE1);
+                var value4HighByte = QueryE2(0xF1);
+                if (value4LowByte.HasValue && value4HighByte.HasValue)
+                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0; // in ppm
             }
             byte? statusByte = QueryE2(0x71);
             if (statusByte != 0x00)
