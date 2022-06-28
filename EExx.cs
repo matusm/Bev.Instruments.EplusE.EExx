@@ -273,6 +273,7 @@ namespace Bev.Instruments.EplusE.EExx
             if (series == 7) return TransmitterGroup.EE07;
             if (series == 8) return TransmitterGroup.EE08;
             if (series == 871) return TransmitterGroup.EE871;
+            if (series == 873) return TransmitterGroup.EE871; // see E2-Interface-CO2.pdf p.3
             if (series == 892) return TransmitterGroup.EE892;
             if (series == 893) return TransmitterGroup.EE893;
             if (series == 894) return TransmitterGroup.EE894;
