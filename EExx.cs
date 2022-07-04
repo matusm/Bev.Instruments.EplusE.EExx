@@ -1,8 +1,9 @@
 ﻿//*****************************************************************************
 // 
-// Library for the communication of E+E EE03, EE07, EE08 (and simmilar) 
+// Library for the communication of E+E EE03, EE07, EE08, EE894 (and simmilar) 
 // transmitters via serial port. The transmitter must be interfaced using the
 // "HA011001 E2 to Serial" converter. This version uses undocumented commands.
+// 
 // 
 // Usage:
 // 1.) create instance of the EExx class with the COM port name as parameter;
@@ -100,7 +101,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void UpdateValues()
         {
-            // E2 bus compliant
+            // E2 bus complient
             // E2Interface-RS232_englisch.pdf
             // Specification_E2_Interface.pdf
             if (transmitterGroup == TransmitterGroup.EE03)
@@ -124,23 +125,20 @@ namespace Bev.Instruments.EplusE.EExx
                 if (tempLowByte.HasValue && tempHighByte.HasValue)
                     Temperature = (tempLowByte.Value + tempHighByte.Value * 256.0) / 100.0 - 273.15; // in °C
             }
-            if (value3Available)
+            if (value4Available || value3Available)
             {
                 var value3LowByte = QueryE2(0xC1);
                 var value3HighByte = QueryE2(0xD1);
+                var value4LowByte = QueryE2(0xE1);
+                var value4HighByte = QueryE2(0xD1);
                 if (value3LowByte.HasValue && value3HighByte.HasValue)
                     Value3 = value3LowByte.Value + value3HighByte.Value * 256.0; // in ppm or mbar
-                if (transmitterGroup == TransmitterGroup.EE894)
+                if (value4LowByte.HasValue && value4HighByte.HasValue)
+                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0; // in ppm
+                if(transmitterGroup==TransmitterGroup.EE894)
                 {
                     Value3 *= 0.1; // ambient pressure in mbar (hPa)
                 }
-            }
-            if (value4Available)
-            {
-                var value4LowByte = QueryE2(0xE1);
-                var value4HighByte = QueryE2(0xF1);
-                if (value4LowByte.HasValue && value4HighByte.HasValue)
-                    Value4 = value4LowByte.Value + value4HighByte.Value * 256.0; // in ppm
             }
             byte? statusByte = QueryE2(0x71);
             if (statusByte != 0x00)
@@ -176,21 +174,18 @@ namespace Bev.Instruments.EplusE.EExx
 
         private void GetAvailableValues()
         {
-            // E2 bus compliant
-            byte? bitPattern = QueryE2(0x31);
+            // E2 bus complient
+            var bitPattern = QueryE2(0x31);
             if (bitPattern is byte bits)
             {
                 humidityAvailable = IsBitSetInByte(bits, 0);
                 temperatureAvailable = IsBitSetInByte(bits, 1);
                 value3Available = IsBitSetInByte(bits, 2);
                 value4Available = IsBitSetInByte(bits, 3);
+                // this is for the EE08 with 0x21
                 if (bits == 0x21)
                 {
-                    temperatureAvailable = true; // for EE08 with 0x21
-                }
-                if (bits == 0x08)
-                {
-                    value3Available = true; // for EE871 EE892 EE893 with 0x08
+                    temperatureAvailable = true;
                 }
             }
         }
@@ -232,7 +227,7 @@ namespace Bev.Instruments.EplusE.EExx
 
         private string _GetInstrumentType()
         {
-            // E2 bus compliant
+            // E2 bus complient
             transmitterGroup = TransmitterGroup.Unknown;
             byte? groupLowByte = QueryE2(0x11);
             if (!groupLowByte.HasValue)
@@ -273,7 +268,6 @@ namespace Bev.Instruments.EplusE.EExx
             if (series == 7) return TransmitterGroup.EE07;
             if (series == 8) return TransmitterGroup.EE08;
             if (series == 871) return TransmitterGroup.EE871;
-            if (series == 873) return TransmitterGroup.EE871; // see E2-Interface-CO2.pdf p.3
             if (series == 892) return TransmitterGroup.EE892;
             if (series == 893) return TransmitterGroup.EE893;
             if (series == 894) return TransmitterGroup.EE894;
