@@ -7,7 +7,7 @@ A lightweight C# library for controlling transmitters like EE03, EE07 and EE08 v
 
 The compact humidity and temperature probes EE03, EE07 and EE08 by [E+E Elektronik](https://www.epluse.com/) are modules with a digital 2-wire bus. The probes must be connected to a "HA011001 E2 to Serial" converter for the use of this class.
 
-This library uses undocummented commands to read out the serial number and the firmware version. However it is purposefully designed to restrict any possibilities to modify probe calibration settings.
+This library uses undocumented commands to read out the serial number and the firmware version. However it is purposefully designed to restrict any possibilities to modify probe calibration settings.
 
 ### Constructor
 
@@ -45,7 +45,7 @@ When set to `true`, the probe specific properties like `InstrumentSerialNumber` 
 
 ## Notes
 
-Once instantiated, it is not possible to modify the object's `DevicePort`. However swaping  instruments on the same port may work. Properties like `InstrumentID` etc. will reflect the actual instrument only when `NeverUseCache` is set to `true`.
+Once instantiated, it is not possible to modify the object's `DevicePort`. However swapping instruments on the same port may work. Properties like `InstrumentID` etc. will reflect the actual instrument only when `NeverUseCache` is set to `true`.
 
 ## Usage
 
@@ -76,7 +76,7 @@ namespace PhotoPlayground
 ```
 ## MeasurementValues Class
 
-This is a simple container class for handling the measurement values (temperature, humidity, ...) obtained by a probe query. Once created the values are immutable. For new measurement values one has to create a new object of this class. 
+This is a simple container class for handling the measurement values (temperature, humidity, ...) obtained by a probe query. Once created, the values are immutable. For new measurement values one has to create a new object of this class. 
 
 ### Members
 
